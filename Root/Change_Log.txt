@@ -1,0 +1,118 @@
+//v1.6.0 Change Log
+-Fixed cycle calculation error that could lead to false timeouts (again!).
+
+//v1.5.9 Change Log
+-Fixed cycle calculation error that could lead to false timeouts.
+
+//v1.5.8 Change Log
+-Added warning when attempting to print with 0s base time setting.
+
+//v1.5.7 Change Log
+-Some system clock resets were causing rare, random, "lost comm" printing aborts - fixed.
+
+//v1.5.6 Change Log
+-Build Table now raises 2" after print finishes (previously only 1").
+-Fixed bug that may have lowered table after print finished, when near upper limit.
+-Fixed linux auto-update not working.
+-Model Position is now relative to bottom of model
+-Added Build Table Area and Height information to layout.
+-Max attach layer cure time increased to 6 minutes.
+-Contour visual aid now renders above transparent support bases.
+
+//v1.5.5 Change Log
+-Slicer now supports multi-threading!!!!
+-Added contour visual aid to layout when adding supports!!!
+-Added x-ray view to layout!
+-You can now mirror a model with supports if there is no x or y rotation on the model.
+-Added "Make straight" button to support parameters
+-Clicking on the support list will automatically move the user into modify support mode.
+-Light, Medium, and Heavy support buttons are now "checkable" when adding supports.
+-Shift dragging a support now alters support angles.
+-Control dragging a support now stretches a support section.
+-Added Left, Back, and Bottom view buttons.
+-Added "support modify occulsion" option to layout
+-You can no longer select support occluded by the model
+-Opening a job file from windows will now open the print dialog.
+-Fixed supports being constricted when adding supports to a model on the ground.
+-Added warning when uploading firmware to unknown arduino devices
+-Added Reset firmware defaults button to Terminal Utility
+
+//v1.5.4 Change Log
+-Fixed slicer crashing on models with complex self intersections.
+-Added "Are you sure" dialog when aborting a print.
+-You can now only attempt to open b9l files with layout and the slicer.
+-Now forbids slicing to formats besides b9j and slc.
+-Added change log link in auto-updator prompt.
+
+//v1.5.3 Change Log
+-Added offline updating support
+
+
+//v1.5.2 Change Log
+-Increased slicer accuracy.
+
+
+//v1.5.1 Change Log
+-Auto Updator now can create subdirectories locally
+-layout will now load models in the same directory as layout file if a model cant be found.
+-Printing now disables sleeps, dimming, screensave, and turning off of the display on windows.
+-Fixed stl import issues, triangle normals are now based on right hand rule.
+
+
+//v1.5 Change Log
+-Added File Auto Updating System
+-Assimp Library removed from project.
+-Added Custom STL Loader.
+-Added support mode to layout.
+-Added STL exporting.
+-Improved Layout framerate dramatically, by utilizing multiple display lists.
+-Slicing now doesnt require layout to build display lists, and uses less memory.
+-Slicing dialog now displays correct message when cancelled.
+-Models in layout view can now be dragged accurately with the mouse.
+-Models in layout view can now be rotated accurately with the mouse.
+-Locations of program specific files now moved to the appdata directory on windows.
+-B9Creator now requests administrative privileges On Windows vista,7,8
+-B9Edit no longer asks the user twice if they want to save while closing.
+-User can now specify 0 support fill layers in order to get rid of existing fill layers in B9Edit
+-Cycle settings will now load correctely apon software install.
+-Renamed local x,y,z rotations with spin and intruduced orientation tool.
+-Mouse events are now passed from layout window to worldview widget, fixes shift/control actions not working in certain situations.
+-Fixed duplication re-baking the model.
+-Slicing speed significantly improved when slicing large polygon models.
+-Slice save dialog now suggests layout name;
+-Fixed issue were slicing progress bar would not match actual slicing progress.
+-Custom User-Made materials are now saved and loaded from the registry.
+      old user materials will still load in from the old file. the first time.
+-Removed depreciated b9edit about box.
+-Layout file now contains support informtation for models.
+-Removed "Dry Run" option from printer prep dialog.  No longer needed.
+-Fixed print time estimate bug (breathe and settle times were not calculated correctly)
+-Added Job Name & Description to the Print status dialog
+-Multiple changes to the main window (Edit moved to menu, Settings menu added,etc.)
+-Added Build Table and Projector Calibration wizards
+-Fixed bug in materials manager that allowed changing factory material settings
+
+
+//v1.4 Summary of Changes
+-Opening B9Edit from the main menu will create an empty job.
+-Fixed "grey image" in B9Edit if job was sliced with object raised (not snapped to floor).
+-Fixed SliceManager window not closing when B9Edit window closes.
+-Fixed SLC file import erroneously filling in voids when they should be black.
+-Fixed Linux SaveAs functions not adding extensions to files.
+-Fixed Projector warning conflicting with splash screen.
+-Windows/Mac SaveAs dialog will now preserve previous file extensions, if they don't match the save extension.
+-Screen Saver is now disabled automatically while printing in Windows, Mac, and Linux.
+-Installing debian package should now add user to the dialout group.
+-Updated splash screen & application icons to new logo.
+-Added document icons for job and layout file types.
+-Added Mirror function in Layout to allow display and slicing of "mirrored" models.
+-Added Mirror funtion in Print to allow printing of "mirrored" job file.
+-Projector's lamp power and aspect ratio is now reset automatically at the start of every print job.
+-Layout screen now centers when creating new project.
+-Shift-right-click now pans layout view.
+-Added zero padding to file names when exporting slice images to folders in B9Edit.
+
+
+Installation Notes:
+When using the new update on a Mac for the first time, 
+wait for the "Updating Firmware" message to appear the first time and then restart B9Creator
