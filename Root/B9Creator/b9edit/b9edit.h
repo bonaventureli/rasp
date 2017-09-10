@@ -48,8 +48,6 @@
 #include "SliceEditView.h"
 #include "aboutbox.h"
 #include <QCloseEvent>
-
-
 class B9Edit : public QMainWindow
 {
 	Q_OBJECT

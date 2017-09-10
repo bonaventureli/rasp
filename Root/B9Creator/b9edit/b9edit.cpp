@@ -43,6 +43,8 @@
 #include <QSvgRenderer> // see copyright distribution notice on qt's website!
 #include <OS_Wrapper_Functions.h>
 #include <QInputDialog>
+#include <QApplication>
+
 //Public
 B9Edit::B9Edit(QWidget *parent, Qt::WindowFlags flags, QString infile)
 	: QMainWindow(parent, flags)
@@ -998,11 +1000,11 @@ void B9Edit::ShowSliceWindow()
         pEditView->resize(pEditView->pDrawingContext->pActiveImage->width() + pEditView->ui.horizontalSlider->width()-30, pEditView->pDrawingContext->pActiveImage->height() + 100);
 
 
-    if(QApplication::desktop()->width() < pEditView->size().width()+100 || QApplication::desktop()->height() < pEditView->size().height()+100)
-    {
-            pEditView->showMaximized();
-    }
-
+//    if(QApplication::desktop()->width() < pEditView->size().width()+100 || QApplication::desktop()->height() < pEditView->size().height()+100)
+//    {
+//            pEditView->showMaximized();
+//    }
+//
 
 
 

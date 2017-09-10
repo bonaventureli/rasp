@@ -608,8 +608,8 @@ bool B9UpdateManager::CopyFromTemp()
                     QFile::remove(QString(dest).append(".old"));
 
                 //rename the executable we are running. to the .old
-                if(rename(dest.toAscii(),
-                           QString(dest).append(".old").toAscii()))
+                if(rename(dest.toLatin1(),
+                           QString(dest).append(".old").toLatin1()))
                     return false;
             }
             else
@@ -628,29 +628,29 @@ bool B9UpdateManager::CopyFromTemp()
             if(updateEntries[i].fileName == "B9Creator")
             {
                 #ifdef Q_OS_MAC
-                system(QString("chmod +x " + dest).toAscii());
+                system(QString("chmod +x " + dest).toLatin1());
                 #endif
                 #ifdef Q_OS_LINUX
-                    system(QString("chmod +x \"" + dest + "\"").toAscii());
+                    system(QString("chmod +x \"" + dest + "\"").toLatin1());
                 #endif
             }
             if(updateEntries[i].fileName == "avrdude")
             {
                 qDebug() << "APPLYING EXECUTABLNESS TO AVRDUDE!";
                 #ifdef Q_OS_MAC
-                    system(QString("chmod +x \"" + dest + "\"").toAscii());
+                    system(QString("chmod +x \"" + dest + "\"").toLatin1());
                 #endif
                 #ifdef Q_OS_LINUX
-                    system(QString("chmod +x \"" +  dest + "\"").toAscii());
+                    system(QString("chmod +x \"" +  dest + "\"").toLatin1());
                 #endif
             }
             if(updateEntries[i].fileName == "avrdude.conf")
             {
                 #ifdef Q_OS_MAC
-                system(QString("chmod +x \"" + dest + "\"").toAscii());
+                system(QString("chmod +x \"" + dest + "\"").toLatin1());
                 #endif
                 #ifdef Q_OS_LINUX
-                system(QString("chmod +x \"" + dest + "\"").toAscii());
+                system(QString("chmod +x \"" + dest + "\"").toLatin1());
                 #endif
             }
         }

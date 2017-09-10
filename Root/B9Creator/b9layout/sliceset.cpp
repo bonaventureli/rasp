@@ -46,7 +46,7 @@
 
 #include <QtDebug>
 #include <QFutureSynchronizer>
-
+#include <QtConcurrent>
 
 SliceSet::SliceSet(B9ModelInstance* pParentInstance)
 {

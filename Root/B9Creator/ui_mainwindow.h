@@ -96,7 +96,6 @@ public:
         actionB9Creator_Terminal_Utility->setObjectName(QStringLiteral("actionB9Creator_Terminal_Utility"));
         actionB9Creator_Terminal_Utility->setShortcutContext(Qt::WindowShortcut);
         actionB9Creator_Terminal_Utility->setVisible(true);
-        //actionB9Creator_Terminal_Utility->setSoftKeyRole(QAction::NoSoftKey);
         actionCheck_For_Updates = new QAction(MainWindow);
         actionCheck_For_Updates->setObjectName(QStringLiteral("actionCheck_For_Updates"));
         actionEdit_Job = new QAction(MainWindow);

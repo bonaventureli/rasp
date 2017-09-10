@@ -323,9 +323,6 @@
    <property name="visible">
     <bool>true</bool>
    </property>
-   <property name="softKeyRole">
-    <enum>QAction::NoSoftKey</enum>
-   </property>
   </action>
   <action name="actionCheck_For_Updates">
    <property name="text">

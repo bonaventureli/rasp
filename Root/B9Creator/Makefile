@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQEXTSERIALPORT_USING_SHARED -D__linux__ -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_SVG_LIB -DQT_WIDGETS_LIB -DQT_CONCURRENT_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQESP_NO_UDEV -D__linux__ -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_SVG_LIB -DQT_WIDGETS_LIB -DQT_CONCURRENT_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -Ib9slice -Ib9edit -Ib9create -Iqextserialport-1.2beta2/src -I/usr/include/qt5 -I/usr/include/qt5/QtOpenGL -I/usr/include/qt5/QtSvg -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtConcurrent -I/usr/include/qt5/QtNetwork -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I. -I.
 LINK          = g++
-LFLAGS        = -m64 -Wl,-O1 -Wl,-rpath,/home/andy/code/B9Creator/Root/B9Creator/qextserialport-1.2beta2/lib
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/home/andy/code/B9Creator/Root/B9Creator/qextserialport-1.2beta2/lib -lQtExtSerialPort-1.2 -lGLU -lz -lQt5OpenGL -L/usr/lib/x86_64-linux-gnu -lQt5Svg -lQt5Widgets -lQt5Concurrent -lQt5Network -lQt5Gui -lQt5Core -lGL -lpthread 
+LFLAGS        = -m64 -Wl,-O1
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lGLU -lz -lQt5OpenGL -L/usr/lib/x86_64-linux-gnu -lQt5Svg -lQt5Widgets -lQt5Concurrent -lQt5Network -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -91,7 +91,11 @@ SOURCES       = main.cpp \
 		b9modelwriter.cpp \
 		dlgcalbuildtable.cpp \
 		dlgcalprojector.cpp \
-		b9layout/b9tesselator.cpp qrc_sliceeditview.cpp \
+		b9layout/b9tesselator.cpp \
+		qextserialport-1.2beta2/src/qextserialport.cpp \
+		qextserialport-1.2beta2/src/qextserialenumerator.cpp \
+		qextserialport-1.2beta2/src/qextserialport_unix.cpp \
+		qextserialport-1.2beta2/src/qextserialenumerator_unix.cpp qrc_sliceeditview.cpp \
 		qrc_b9edit.cpp \
 		moc_mainwindow.cpp \
 		moc_loadingbar.cpp \
@@ -166,6 +170,10 @@ OBJECTS       = main.o \
 		dlgcalbuildtable.o \
 		dlgcalprojector.o \
 		b9tesselator.o \
+		qextserialport.o \
+		qextserialenumerator.o \
+		qextserialport_unix.o \
+		qextserialenumerator_unix.o \
 		qrc_sliceeditview.o \
 		qrc_b9edit.o \
 		moc_mainwindow.o \
@@ -447,7 +455,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/B9Creator1.0.0 || mkdir -p .tmp/B9Creator1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents b9edit/sliceeditview.qrc b9edit/b9edit.qrc b9edit/sliceeditview.qrc .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents mainwindow.h logfilemanager.h loadingbar.h crushbitmap.h b9terminal.h b9printercomm.h b9projector.h b9edit/SliceEditView.h b9edit/floodfill.h b9edit/DrawingContext.h b9edit/b9edit.h b9edit/aboutbox.h helpsystem.h b9nativeapp.h dlgcyclesettings.h dlgmaterialsmanager.h b9matcat.h b9print.h b9layout/worldview.h b9layout/triangle3d.h b9layout/sliceset.h b9layout/slicecontext.h b9layout/slice.h b9layout/SlcExporter.h b9layout/segment.h b9layout/modeldata.h b9layout/loop.h OS_GL_Wrapper.h b9layout/b9layout.h b9slice/b9slice.h dlgprintprep.h OS_Wrapper_Functions.h screensaverwaker.h b9material.h b9printermodeldata.h b9printermodelmanager.h b9updatemanager.h b9updateentry.h b9modelloader.h b9layout/b9layoutprojectdata.h b9layout/b9modelinstance.h b9supportstructure.h b9layout/geometricfunctions.h b9layout/b9verticaltricontainer.h b9modelwriter.h dlgcalbuildtable.h dlgcalprojector.h b9layout/b9tesselator.h .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents main.cpp mainwindow.cpp logfilemanager.cpp loadingbar.cpp crushbitmap.cpp b9terminal.cpp b9printercomm.cpp b9projector.cpp b9edit/SliceEditView.cpp b9edit/floodfill.cpp b9edit/DrawingContext.cpp b9edit/b9edit.cpp b9edit/aboutbox.cpp helpsystem.cpp b9nativeapp.cpp dlgcyclesettings.cpp dlgmaterialsmanager.cpp b9matcat.cpp b9print.cpp b9layout/worldview.cpp b9layout/triangle3d.cpp b9layout/sliceset.cpp b9layout/slicecontext.cpp b9layout/slice.cpp b9layout/SlcExporter.cpp b9layout/segment.cpp b9layout/modeldata.cpp b9layout/loop.cpp b9layout/b9layout.cpp b9slice/b9slice.cpp dlgprintprep.cpp OS_Wrapper_Functions.cpp screensaverwaker.cpp b9material.cpp b9printermodeldata.cpp b9printermodelmanager.cpp b9updatemanager.cpp b9modelloader.cpp b9layout/b9layoutprojectdata.cpp b9layout/b9modelinstance.cpp b9supportstructure.cpp b9layout/geometricfunctions.cpp b9layout/b9verticaltricontainer.cpp b9modelwriter.cpp dlgcalbuildtable.cpp dlgcalprojector.cpp b9layout/b9tesselator.cpp .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents mainwindow.ui b9terminal.ui b9edit/sliceeditview.ui b9edit/b9edit.ui b9edit/aboutbox.ui b9slice/b9slice.ui dlgcyclesettings.ui dlgmaterialsmanager.ui b9print.ui b9layout/slicedebugwindow.ui b9layout/b93dmain.ui dlgprintprep.ui dlgcalbuildtable.ui dlgcalprojector.ui .tmp/B9Creator1.0.0/ && (cd `dirname .tmp/B9Creator1.0.0` && $(TAR) B9Creator1.0.0.tar B9Creator1.0.0 && $(COMPRESS) B9Creator1.0.0.tar) && $(MOVE) `dirname .tmp/B9Creator1.0.0`/B9Creator1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/B9Creator1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents b9edit/sliceeditview.qrc b9edit/b9edit.qrc b9edit/sliceeditview.qrc .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents mainwindow.h logfilemanager.h loadingbar.h crushbitmap.h b9terminal.h b9printercomm.h b9projector.h b9edit/SliceEditView.h b9edit/floodfill.h b9edit/DrawingContext.h b9edit/b9edit.h b9edit/aboutbox.h helpsystem.h b9nativeapp.h dlgcyclesettings.h dlgmaterialsmanager.h b9matcat.h b9print.h b9layout/worldview.h b9layout/triangle3d.h b9layout/sliceset.h b9layout/slicecontext.h b9layout/slice.h b9layout/SlcExporter.h b9layout/segment.h b9layout/modeldata.h b9layout/loop.h OS_GL_Wrapper.h b9layout/b9layout.h b9slice/b9slice.h dlgprintprep.h OS_Wrapper_Functions.h screensaverwaker.h b9material.h b9printermodeldata.h b9printermodelmanager.h b9updatemanager.h b9updateentry.h b9modelloader.h b9layout/b9layoutprojectdata.h b9layout/b9modelinstance.h b9supportstructure.h b9layout/geometricfunctions.h b9layout/b9verticaltricontainer.h b9modelwriter.h dlgcalbuildtable.h dlgcalprojector.h b9layout/b9tesselator.h qextserialport-1.2beta2/src/qextserialport.h qextserialport-1.2beta2/src/qextserialport_p.h qextserialport-1.2beta2/src/qextserialenumerator.h qextserialport-1.2beta2/src/qextserialenumerator_p.h qextserialport-1.2beta2/src/qextserialport_global.h .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents main.cpp mainwindow.cpp logfilemanager.cpp loadingbar.cpp crushbitmap.cpp b9terminal.cpp b9printercomm.cpp b9projector.cpp b9edit/SliceEditView.cpp b9edit/floodfill.cpp b9edit/DrawingContext.cpp b9edit/b9edit.cpp b9edit/aboutbox.cpp helpsystem.cpp b9nativeapp.cpp dlgcyclesettings.cpp dlgmaterialsmanager.cpp b9matcat.cpp b9print.cpp b9layout/worldview.cpp b9layout/triangle3d.cpp b9layout/sliceset.cpp b9layout/slicecontext.cpp b9layout/slice.cpp b9layout/SlcExporter.cpp b9layout/segment.cpp b9layout/modeldata.cpp b9layout/loop.cpp b9layout/b9layout.cpp b9slice/b9slice.cpp dlgprintprep.cpp OS_Wrapper_Functions.cpp screensaverwaker.cpp b9material.cpp b9printermodeldata.cpp b9printermodelmanager.cpp b9updatemanager.cpp b9modelloader.cpp b9layout/b9layoutprojectdata.cpp b9layout/b9modelinstance.cpp b9supportstructure.cpp b9layout/geometricfunctions.cpp b9layout/b9verticaltricontainer.cpp b9modelwriter.cpp dlgcalbuildtable.cpp dlgcalprojector.cpp b9layout/b9tesselator.cpp qextserialport-1.2beta2/src/qextserialport.cpp qextserialport-1.2beta2/src/qextserialenumerator.cpp qextserialport-1.2beta2/src/qextserialport_unix.cpp qextserialport-1.2beta2/src/qextserialenumerator_unix.cpp .tmp/B9Creator1.0.0/ && $(COPY_FILE) --parents mainwindow.ui b9terminal.ui b9edit/sliceeditview.ui b9edit/b9edit.ui b9edit/aboutbox.ui b9slice/b9slice.ui dlgcyclesettings.ui dlgmaterialsmanager.ui b9print.ui b9layout/slicedebugwindow.ui b9layout/b93dmain.ui dlgprintprep.ui dlgcalbuildtable.ui dlgcalprojector.ui .tmp/B9Creator1.0.0/ && (cd `dirname .tmp/B9Creator1.0.0` && $(TAR) B9Creator1.0.0.tar B9Creator1.0.0 && $(COMPRESS) B9Creator1.0.0.tar) && $(MOVE) `dirname .tmp/B9Creator1.0.0`/B9Creator1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/B9Creator1.0.0
 
 
 clean:compiler_clean 
@@ -472,50 +480,50 @@ compiler_rcc_make_all: qrc_sliceeditview.cpp qrc_b9edit.cpp qrc_sliceeditview.cp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_sliceeditview.cpp qrc_b9edit.cpp qrc_sliceeditview.cpp
 qrc_sliceeditview.cpp: b9edit/sliceeditview.qrc \
-		b9edit/icons/diamondsupporticon.png \
-		b9edit/icons/penwhiteicon.png \
-		b9edit/icons/trianglesupporticon.png \
-		b9edit/icons/penblackicon.png \
 		b9edit/icons/boxsupporticon.png \
 		b9edit/icons/bucketwhiteicon.png \
 		b9edit/icons/cylindersupporticon.png \
+		b9edit/icons/penwhiteicon.png \
 		b9edit/icons/bucketblackicon.png \
-		b9edit/icons/crosshair.png \
+		b9edit/icons/diamondsupporticon.png \
+		b9edit/icons/penblackicon.png \
+		b9edit/icons/trianglesupporticon.png \
+		b9edit/icons/penwhite.png \
+		b9edit/icons/penblack.png \
 		b9edit/icons/delete.png \
-		b9edit/icons/bucketwhite.png \
+		b9edit/icons/crosshair.png \
 		b9edit/icons/bucket.png \
+		b9edit/icons/bucketwhite.png
+	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name sliceeditview b9edit/sliceeditview.qrc -o qrc_sliceeditview.cpp
+
+qrc_b9edit.cpp: b9edit/b9edit.qrc \
+		b9edit/icons/importslices.png \
+		b9edit/icons/save.png \
+		b9edit/icons/open.png \
+		b9edit/icons/edit.png \
+		b9edit/icons/new.png
+	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name b9edit b9edit/b9edit.qrc -o qrc_b9edit.cpp
+
+qrc_sliceeditview.cpp: b9edit/sliceeditview.qrc \
+		b9edit/icons/penblackicon.png \
+		b9edit/icons/diamondsupporticon.png \
+		b9edit/icons/trianglesupporticon.png \
+		b9edit/icons/bucketwhiteicon.png \
+		b9edit/icons/bucketblackicon.png \
+		b9edit/icons/boxsupporticon.png \
+		b9edit/icons/cylindersupporticon.png \
+		b9edit/icons/penwhiteicon.png \
+		b9edit/icons/delete.png \
+		b9edit/icons/crosshair.png \
+		b9edit/icons/bucket.png \
+		b9edit/icons/bucketwhite.png \
 		b9edit/icons/penwhite.png \
 		b9edit/icons/penblack.png
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name sliceeditview b9edit/sliceeditview.qrc -o qrc_sliceeditview.cpp
 
-qrc_b9edit.cpp: b9edit/b9edit.qrc \
-		b9edit/icons/open.png \
-		b9edit/icons/save.png \
-		b9edit/icons/new.png \
-		b9edit/icons/edit.png \
-		b9edit/icons/importslices.png
-	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name b9edit b9edit/b9edit.qrc -o qrc_b9edit.cpp
-
-qrc_sliceeditview.cpp: b9edit/sliceeditview.qrc \
-		b9edit/icons/diamondsupporticon.png \
-		b9edit/icons/cylindersupporticon.png \
-		b9edit/icons/penwhiteicon.png \
-		b9edit/icons/penblackicon.png \
-		b9edit/icons/trianglesupporticon.png \
-		b9edit/icons/bucketwhiteicon.png \
-		b9edit/icons/bucketblackicon.png \
-		b9edit/icons/boxsupporticon.png \
-		b9edit/icons/penwhite.png \
-		b9edit/icons/penblack.png \
-		b9edit/icons/bucket.png \
-		b9edit/icons/crosshair.png \
-		b9edit/icons/delete.png \
-		b9edit/icons/bucketwhite.png
-	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name sliceeditview b9edit/sliceeditview.qrc -o qrc_sliceeditview.cpp
-
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_loadingbar.cpp moc_b9terminal.cpp moc_b9printercomm.cpp moc_b9projector.cpp moc_SliceEditView.cpp moc_DrawingContext.cpp moc_b9edit.cpp moc_aboutbox.cpp moc_dlgcyclesettings.cpp moc_dlgmaterialsmanager.cpp moc_b9matcat.cpp moc_b9print.cpp moc_worldview.cpp moc_slicecontext.cpp moc_b9layout.cpp moc_b9slice.cpp moc_dlgprintprep.cpp moc_screensaverwaker.cpp moc_b9printermodelmanager.cpp moc_b9updatemanager.cpp moc_b9modelloader.cpp moc_b9layoutprojectdata.cpp moc_b9modelwriter.cpp moc_dlgcalbuildtable.cpp moc_dlgcalprojector.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_loadingbar.cpp moc_b9terminal.cpp moc_b9printercomm.cpp moc_b9projector.cpp moc_SliceEditView.cpp moc_DrawingContext.cpp moc_b9edit.cpp moc_aboutbox.cpp moc_dlgcyclesettings.cpp moc_dlgmaterialsmanager.cpp moc_b9matcat.cpp moc_b9print.cpp moc_worldview.cpp moc_slicecontext.cpp moc_b9layout.cpp moc_b9slice.cpp moc_dlgprintprep.cpp moc_screensaverwaker.cpp moc_b9printermodelmanager.cpp moc_b9updatemanager.cpp moc_b9modelloader.cpp moc_b9layoutprojectdata.cpp moc_b9modelwriter.cpp moc_dlgcalbuildtable.cpp moc_dlgcalprojector.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_loadingbar.cpp moc_b9terminal.cpp moc_b9printercomm.cpp moc_b9projector.cpp moc_SliceEditView.cpp moc_DrawingContext.cpp moc_b9edit.cpp moc_aboutbox.cpp moc_dlgcyclesettings.cpp moc_dlgmaterialsmanager.cpp moc_b9matcat.cpp moc_b9print.cpp moc_worldview.cpp moc_slicecontext.cpp moc_b9layout.cpp moc_b9slice.cpp moc_dlgprintprep.cpp moc_screensaverwaker.cpp moc_b9printermodelmanager.cpp moc_b9updatemanager.cpp moc_b9modelloader.cpp moc_b9layoutprojectdata.cpp moc_b9modelwriter.cpp moc_dlgcalbuildtable.cpp moc_dlgcalprojector.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_loadingbar.cpp moc_b9terminal.cpp moc_b9printercomm.cpp moc_b9projector.cpp moc_SliceEditView.cpp moc_DrawingContext.cpp moc_b9edit.cpp moc_aboutbox.cpp moc_dlgcyclesettings.cpp moc_dlgmaterialsmanager.cpp moc_b9matcat.cpp moc_b9print.cpp moc_worldview.cpp moc_slicecontext.cpp moc_b9layout.cpp moc_b9slice.cpp moc_dlgprintprep.cpp moc_screensaverwaker.cpp moc_b9printermodelmanager.cpp moc_b9updatemanager.cpp moc_b9modelloader.cpp moc_b9layoutprojectdata.cpp moc_b9modelwriter.cpp moc_dlgcalbuildtable.cpp moc_dlgcalprojector.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
 moc_mainwindow.cpp: /usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -1048,6 +1056,18 @@ moc_loadingbar.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtGui/qicon.h \
 		loadingbar.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include loadingbar.h -o moc_loadingbar.cpp
 
@@ -1160,6 +1180,7 @@ moc_b9terminal.cpp: /usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -1172,7 +1193,6 @@ moc_b9terminal.cpp: /usr/include/qt5/QtWidgets/QDesktopWidget \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -1388,10 +1408,10 @@ moc_b9projector.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		b9projector.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include b9projector.h -o moc_b9projector.cpp
 
-moc_SliceEditView.cpp: ui_sliceeditview.h \
-		/usr/include/qt5/QtCore/QVariant \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qatomic.h \
+moc_SliceEditView.cpp: /usr/include/qt5/QtWidgets/QMainWindow \
+		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1399,12 +1419,7 @@ moc_SliceEditView.cpp: ui_sliceeditview.h \
 		/usr/include/qt5/QtCore/qprocessordetection.h \
 		/usr/include/qt5/QtCore/qcompilerdetection.h \
 		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qatomic.h \
 		/usr/include/qt5/QtCore/qbasicatomic.h \
 		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
 		/usr/include/qt5/QtCore/qgenericatomic.h \
@@ -1427,56 +1442,49 @@ moc_SliceEditView.cpp: ui_sliceeditview.h \
 		/usr/include/qt5/QtCore/qatomic_x86.h \
 		/usr/include/qt5/QtCore/qatomic_cxx11.h \
 		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qstring.h \
 		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h \
 		/usr/include/qt5/QtCore/qlist.h \
 		/usr/include/qt5/QtCore/qalgorithms.h \
 		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
 		/usr/include/qt5/QtCore/qmetatype.h \
 		/usr/include/qt5/QtCore/qvarlengtharray.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtWidgets/QAction \
-		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtGui/qkeysequence.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
 		/usr/include/qt5/QtCore/qmargins.h \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtGui/qpaintdevice.h \
 		/usr/include/qt5/QtGui/qpalette.h \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
 		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
 		/usr/include/qt5/QtGui/qmatrix.h \
 		/usr/include/qt5/QtGui/qpolygon.h \
 		/usr/include/qt5/QtGui/qregion.h \
@@ -1486,20 +1494,35 @@ moc_SliceEditView.cpp: ui_sliceeditview.h \
 		/usr/include/qt5/QtGui/qimage.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
 		/usr/include/qt5/QtWidgets/qsizepolicy.h \
 		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
 		/usr/include/qt5/QtCore/qurl.h \
 		/usr/include/qt5/QtCore/qurlquery.h \
 		/usr/include/qt5/QtCore/qfile.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtGui/qicon.h \
+		ui_sliceeditview.h \
+		/usr/include/qt5/QtCore/QVariant \
+		/usr/include/qt5/QtWidgets/QAction \
+		/usr/include/qt5/QtWidgets/qaction.h \
 		/usr/include/qt5/QtWidgets/qactiongroup.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
@@ -1531,10 +1554,7 @@ moc_SliceEditView.cpp: ui_sliceeditview.h \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/QMenu \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/QMenuBar \
@@ -2070,9 +2090,10 @@ moc_DrawingContext.cpp: /usr/include/qt5/QtGui/QtGui \
 		b9edit/DrawingContext.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include b9edit/DrawingContext.h -o moc_DrawingContext.cpp
 
-moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
+moc_b9edit.cpp: /usr/include/qt5/QtWidgets/QMainWindow \
+		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -2109,23 +2130,20 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/qtypeinfo.h \
 		/usr/include/qt5/QtCore/qtypetraits.h \
 		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
 		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
 		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
 		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
 		/usr/include/qt5/QtCore/qcoreevent.h \
 		/usr/include/qt5/QtCore/qscopedpointer.h \
 		/usr/include/qt5/QtCore/qmetatype.h \
@@ -2133,31 +2151,22 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtWidgets/QMessageBox \
-		/usr/include/qt5/QtWidgets/qmessagebox.h \
-		/usr/include/qt5/QtWidgets/qdialog.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
 		/usr/include/qt5/QtCore/qmargins.h \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtGui/qpaintdevice.h \
 		/usr/include/qt5/QtGui/qpalette.h \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
 		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
 		/usr/include/qt5/QtGui/qmatrix.h \
 		/usr/include/qt5/QtGui/qpolygon.h \
 		/usr/include/qt5/QtGui/qregion.h \
@@ -2167,7 +2176,9 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtGui/qimage.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
@@ -2175,12 +2186,25 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtGui/qcursor.h \
 		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
 		/usr/include/qt5/QtCore/qurl.h \
 		/usr/include/qt5/QtCore/qurlquery.h \
 		/usr/include/qt5/QtCore/qfile.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h \
+		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/QFileDialog \
 		/usr/include/qt5/QtWidgets/qfiledialog.h \
 		/usr/include/qt5/QtCore/qdir.h \
@@ -2189,7 +2213,6 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/QAction \
 		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtWidgets/qactiongroup.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
@@ -2223,7 +2246,6 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtWidgets/QLabel \
 		/usr/include/qt5/QtWidgets/qlabel.h \
@@ -2233,8 +2255,6 @@ moc_b9edit.cpp: /usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtGui/qtextformat.h \
 		/usr/include/qt5/QtGui/qpen.h \
 		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/QMenu \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/QMenuBar \
@@ -2668,6 +2688,7 @@ moc_dlgcyclesettings.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -2680,7 +2701,6 @@ moc_dlgcyclesettings.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -3008,6 +3028,7 @@ moc_b9print.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
 		/usr/include/qt5/QtCore/qbasictimer.h \
@@ -3017,7 +3038,6 @@ moc_b9print.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtCore/QtDebug \
 		logfilemanager.h \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -4775,6 +4795,7 @@ moc_dlgprintprep.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -4787,7 +4808,6 @@ moc_dlgprintprep.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -5197,6 +5217,18 @@ moc_b9updatemanager.cpp: /usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtGui/qevent.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtGui/qicon.h \
 		b9updateentry.h \
 		b9updatemanager.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include b9updatemanager.h -o moc_b9updatemanager.cpp
@@ -5840,6 +5872,7 @@ moc_dlgcalbuildtable.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -5852,7 +5885,6 @@ moc_dlgcalbuildtable.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -5978,6 +6010,7 @@ moc_dlgcalprojector.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -5990,7 +6023,6 @@ moc_dlgcalprojector.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -6003,6 +6035,132 @@ moc_dlgcalprojector.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtCore/QDataStream \
 		dlgcalprojector.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include dlgcalprojector.h -o moc_dlgcalprojector.cpp
+
+moc_qextserialport.cpp: /usr/include/qt5/QtCore/QIODevice \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialport.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include qextserialport-1.2beta2/src/qextserialport.h -o moc_qextserialport.cpp
+
+moc_qextserialenumerator.cpp: /usr/include/qt5/QtCore/QList \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialenumerator.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include qextserialport-1.2beta2/src/qextserialenumerator.h -o moc_qextserialenumerator.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -6061,11 +6219,9 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-main.o: main.cpp /usr/include/qt5/QtWidgets/QSplashScreen \
-		/usr/include/qt5/QtWidgets/qsplashscreen.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
+main.o: main.cpp /usr/include/qt5/QtWidgets/QApplication \
+		/usr/include/qt5/QtWidgets/qapplication.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -6102,59 +6258,64 @@ main.o: main.cpp /usr/include/qt5/QtWidgets/QSplashScreen \
 		/usr/include/qt5/QtCore/qtypeinfo.h \
 		/usr/include/qt5/QtCore/qtypetraits.h \
 		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qstring.h \
 		/usr/include/qt5/QtCore/qchar.h \
 		/usr/include/qt5/QtCore/qbytearray.h \
 		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
 		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
 		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
 		/usr/include/qt5/QtCore/qiterator.h \
 		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
 		/usr/include/qt5/QtCore/qmetatype.h \
 		/usr/include/qt5/QtCore/qvarlengtharray.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
 		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
 		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtCore/qmargins.h \
-		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qbrush.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
 		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
 		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
 		/usr/include/qt5/QtCore/qvariant.h \
@@ -6170,14 +6331,11 @@ main.o: main.cpp /usr/include/qt5/QtWidgets/QSplashScreen \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
-		b9nativeapp.h \
-		/usr/include/qt5/QtWidgets/QApplication \
-		/usr/include/qt5/QtWidgets/qapplication.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
-		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
 		/usr/include/qt5/QtGui/qguiapplication.h \
 		/usr/include/qt5/QtGui/qinputmethod.h \
+		/usr/include/qt5/QtWidgets/QSplashScreen \
+		/usr/include/qt5/QtWidgets/qsplashscreen.h \
+		b9nativeapp.h \
 		mainwindow.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
@@ -6964,6 +7122,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtNetwork/qsslkey.h \
 		/usr/include/qt5/QtNetwork/qtnetworkversion.h \
 		loadingbar.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
 		b9layout/b9layoutprojectdata.h \
 		/usr/include/qt5/QtGui/QVector2D
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
@@ -7211,7 +7371,19 @@ loadingbar.o: loadingbar.cpp loadingbar.h \
 		/usr/include/qt5/QtCore/qfile.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
-		/usr/include/qt5/QtGui/qtouchdevice.h
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtGui/qicon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loadingbar.o loadingbar.cpp
 
 crushbitmap.o: crushbitmap.cpp crushbitmap.h \
@@ -7440,6 +7612,7 @@ b9terminal.o: b9terminal.cpp /usr/include/qt5/QtCore/QtDebug \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -7451,7 +7624,6 @@ b9terminal.o: b9terminal.cpp /usr/include/qt5/QtCore/QtDebug \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -7528,10 +7700,9 @@ b9terminal.o: b9terminal.cpp /usr/include/qt5/QtCore/QtDebug \
 		/usr/include/qt5/QtWidgets/qstyleditemdelegate.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9terminal.o b9terminal.cpp
 
-b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
-		/usr/include/qt5/QtCore/qdir.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
+b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtWidgets/QApplication \
+		/usr/include/qt5/QtWidgets/qapplication.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -7568,15 +7739,13 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtCore/qtypeinfo.h \
 		/usr/include/qt5/QtCore/qtypetraits.h \
 		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
 		/usr/include/qt5/QtCore/qbytearray.h \
 		/usr/include/qt5/QtCore/qrefcount.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
 		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qfileinfo.h \
-		/usr/include/qt5/QtCore/qfile.h \
-		/usr/include/qt5/QtCore/qfiledevice.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
@@ -7590,31 +7759,26 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/QProcess \
-		/usr/include/qt5/QtCore/qprocess.h \
-		/usr/include/qt5/QtCore/QTimer \
-		/usr/include/qt5/QtCore/qtimer.h \
-		/usr/include/qt5/QtCore/qbasictimer.h \
-		/usr/include/qt5/QtWidgets/QMessageBox \
-		/usr/include/qt5/QtWidgets/qmessagebox.h \
-		/usr/include/qt5/QtWidgets/qdialog.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtCore/qmargins.h \
 		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtGui/qpaintdevice.h \
 		/usr/include/qt5/QtGui/qpalette.h \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
 		/usr/include/qt5/QtGui/qbrush.h \
 		/usr/include/qt5/QtCore/qvector.h \
 		/usr/include/qt5/QtGui/qmatrix.h \
@@ -7626,13 +7790,13 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtGui/qimage.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
 		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
 		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
 		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
 		/usr/include/qt5/QtCore/qvariant.h \
@@ -7644,8 +7808,23 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtCore/qcontiguouscache.h \
 		/usr/include/qt5/QtCore/qurl.h \
 		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qguiapplication.h \
+		/usr/include/qt5/QtGui/qinputmethod.h \
+		/usr/include/qt5/QtCore/QDir \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		/usr/include/qt5/QtCore/QProcess \
+		/usr/include/qt5/QtCore/qprocess.h \
+		/usr/include/qt5/QtCore/QTimer \
+		/usr/include/qt5/QtCore/qtimer.h \
+		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h \
+		/usr/include/qt5/QtWidgets/qdialog.h \
 		b9printercomm.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QTime \
@@ -7695,9 +7874,7 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtCore/qjsondocument.h \
 		/usr/include/qt5/QtCore/qjsonobject.h \
 		/usr/include/qt5/QtCore/qabstracteventdispatcher.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
 		/usr/include/qt5/QtCore/qabstractnativeeventfilter.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
 		/usr/include/qt5/QtCore/qmath.h \
 		/usr/include/qt5/QtCore/qmetaobject.h \
 		/usr/include/qt5/QtCore/qmimedata.h \
@@ -7803,6 +7980,18 @@ b9printercomm.o: b9printercomm.cpp /usr/include/qt5/QtCore/QDir \
 		/usr/include/qt5/QtNetwork/qtnetworkversion.h \
 		loadingbar.h \
 		/usr/include/qt5/QtWidgets/QDialog \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtGui/qicon.h \
 		b9updateentry.h \
 		qextserialport-1.2beta2/src/qextserialport.h \
 		qextserialport-1.2beta2/src/qextserialport_global.h \
@@ -8124,7 +8313,9 @@ b9projector.o: b9projector.cpp /usr/include/qt5/QtGui/QtGui \
 		crushbitmap.h \
 		/usr/include/qt5/QtGui/QPixmap \
 		/usr/include/qt5/QtCore/QBitArray \
-		/usr/include/qt5/QtCore/QFile
+		/usr/include/qt5/QtCore/QFile \
+		/usr/include/qt5/QtWidgets/QDesktopWidget \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9projector.o b9projector.cpp
 
 SliceEditView.o: b9edit/SliceEditView.cpp /usr/include/qt5/QtGui/QtGui \
@@ -8428,12 +8619,15 @@ SliceEditView.o: b9edit/SliceEditView.cpp /usr/include/qt5/QtGui/QtGui \
 		/usr/include/qt5/QtGui/qvalidator.h \
 		/usr/include/qt5/QtGui/qtguiversion.h \
 		b9edit/SliceEditView.h \
+		/usr/include/qt5/QtWidgets/QMainWindow \
+		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		ui_sliceeditview.h \
 		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/QAction \
 		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtWidgets/qsizepolicy.h \
 		/usr/include/qt5/QtWidgets/qactiongroup.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
@@ -8457,10 +8651,7 @@ SliceEditView.o: b9edit/SliceEditView.cpp /usr/include/qt5/QtGui/QtGui \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/QMenu \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/QMenuBar \
@@ -8499,7 +8690,11 @@ SliceEditView.o: b9edit/SliceEditView.cpp /usr/include/qt5/QtGui/QtGui \
 		/usr/include/qt5/QtGui/QCloseEvent \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QTimer \
-		/usr/include/qt5/QtGui/QClipboard
+		/usr/include/qt5/QtGui/QClipboard \
+		/usr/include/qt5/QtWidgets/QInputDialog \
+		/usr/include/qt5/QtWidgets/qinputdialog.h \
+		/usr/include/qt5/QtWidgets/QColorDialog \
+		/usr/include/qt5/QtWidgets/qcolordialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SliceEditView.o b9edit/SliceEditView.cpp
 
 floodfill.o: b9edit/floodfill.cpp b9edit/floodfill.h \
@@ -8891,6 +9086,9 @@ DrawingContext.o: b9edit/DrawingContext.cpp b9edit/DrawingContext.h \
 		/usr/include/qt5/QtWidgets/qsizepolicy.h \
 		/usr/include/qt5/QtGui/QImage \
 		b9edit/SliceEditView.h \
+		/usr/include/qt5/QtWidgets/QMainWindow \
+		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		ui_sliceeditview.h \
 		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/QAction \
@@ -8918,10 +9116,7 @@ DrawingContext.o: b9edit/DrawingContext.cpp b9edit/DrawingContext.h \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/QMenu \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/QMenuBar \
@@ -8961,9 +9156,10 @@ DrawingContext.o: b9edit/DrawingContext.cpp b9edit/DrawingContext.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o DrawingContext.o b9edit/DrawingContext.cpp
 
 b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
-		/usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtWidgets/QMainWindow \
+		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -9000,23 +9196,20 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtCore/qtypeinfo.h \
 		/usr/include/qt5/QtCore/qtypetraits.h \
 		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
 		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
 		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
 		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
 		/usr/include/qt5/QtCore/qcoreevent.h \
 		/usr/include/qt5/QtCore/qscopedpointer.h \
 		/usr/include/qt5/QtCore/qmetatype.h \
@@ -9024,31 +9217,22 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtWidgets/QMessageBox \
-		/usr/include/qt5/QtWidgets/qmessagebox.h \
-		/usr/include/qt5/QtWidgets/qdialog.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
 		/usr/include/qt5/QtCore/qmargins.h \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtGui/qpaintdevice.h \
 		/usr/include/qt5/QtGui/qpalette.h \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
 		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
 		/usr/include/qt5/QtGui/qmatrix.h \
 		/usr/include/qt5/QtGui/qpolygon.h \
 		/usr/include/qt5/QtGui/qregion.h \
@@ -9058,7 +9242,9 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtGui/qimage.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
@@ -9066,12 +9252,25 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtGui/qcursor.h \
 		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
 		/usr/include/qt5/QtCore/qurl.h \
 		/usr/include/qt5/QtCore/qurlquery.h \
 		/usr/include/qt5/QtCore/qfile.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h \
+		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/QFileDialog \
 		/usr/include/qt5/QtWidgets/qfiledialog.h \
 		/usr/include/qt5/QtCore/qdir.h \
@@ -9080,7 +9279,6 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/QAction \
 		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtWidgets/qactiongroup.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
@@ -9114,7 +9312,6 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtWidgets/QLabel \
 		/usr/include/qt5/QtWidgets/qlabel.h \
@@ -9124,8 +9321,6 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtGui/qtextformat.h \
 		/usr/include/qt5/QtGui/qpen.h \
 		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/QMenu \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/QMenuBar \
@@ -9334,6 +9529,11 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		/usr/include/qt5/QtGui/QCloseEvent \
 		loadingbar.h \
 		/usr/include/qt5/QtWidgets/QDialog \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtCore/QFileInfo \
 		/usr/include/qt5/QtSvg/QSvgRenderer \
 		/usr/include/qt5/QtSvg/qsvgrenderer.h \
@@ -9341,7 +9541,9 @@ b9edit.o: b9edit/b9edit.cpp b9edit/b9edit.h \
 		OS_Wrapper_Functions.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QTextStream \
-		b9updateentry.h
+		b9updateentry.h \
+		/usr/include/qt5/QtWidgets/QInputDialog \
+		/usr/include/qt5/QtWidgets/qinputdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9edit.o b9edit/b9edit.cpp
 
 aboutbox.o: b9edit/aboutbox.cpp b9edit/aboutbox.h \
@@ -9578,16 +9780,49 @@ helpsystem.o: helpsystem.cpp /usr/include/qt5/QtCore/QByteArray \
 		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtCore/QProcess \
 		/usr/include/qt5/QtCore/qprocess.h \
-		/usr/include/qt5/QtCore/QtDebug \
-		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h \
+		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
 		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
 		/usr/include/qt5/QtCore/qtextstream.h \
 		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/qset.h \
 		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/QtDebug \
 		helpsystem.h \
 		/usr/include/qt5/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o helpsystem.o helpsystem.cpp
@@ -10137,6 +10372,7 @@ dlgcyclesettings.o: dlgcyclesettings.cpp /usr/include/qt5/QtWidgets/QMessageBox 
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -10149,7 +10385,6 @@ dlgcyclesettings.o: dlgcyclesettings.cpp /usr/include/qt5/QtWidgets/QMessageBox 
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -10646,13 +10881,13 @@ b9print.o: b9print.cpp /usr/include/qt5/QtWidgets/QMessageBox \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtCore/QTime \
 		b9printercomm.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QtDebug \
 		logfilemanager.h \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -11803,7 +12038,25 @@ sliceset.o: b9layout/sliceset.cpp b9layout/sliceset.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/QtDebug \
-		/usr/include/qt5/QtCore/QFutureSynchronizer
+		/usr/include/qt5/QtCore/QFutureSynchronizer \
+		/usr/include/qt5/QtConcurrent/QtConcurrent \
+		/usr/include/qt5/QtConcurrent/QtConcurrentDepends \
+		/usr/include/qt5/QtConcurrent/qtconcurrentcompilertest.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrent_global.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentexception.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilter.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilterkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentiteratekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmedian.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentthreadengine.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmapkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentreducekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfunctionwrappers.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmap.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrun.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrunbase.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentstoredfunctioncall.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sliceset.o b9layout/sliceset.cpp
 
 slicecontext.o: b9layout/slicecontext.cpp b9layout/slicecontext.h \
@@ -13255,6 +13508,8 @@ modeldata.o: b9layout/modeldata.cpp b9layout/modeldata.h \
 		loadingbar.h \
 		/usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
 		/usr/include/qt5/QtOpenGL/QtOpenGL \
 		/usr/include/qt5/QtOpenGL/QtOpenGLDepends \
 		/usr/include/qt5/QtWidgets/QtWidgets \
@@ -13340,7 +13595,6 @@ modeldata.o: b9layout/modeldata.cpp b9layout/modeldata.h \
 		/usr/include/qt5/QtWidgets/qmdisubwindow.h \
 		/usr/include/qt5/QtWidgets/qplaintextedit.h \
 		/usr/include/qt5/QtWidgets/qtextedit.h \
-		/usr/include/qt5/QtWidgets/qprogressbar.h \
 		/usr/include/qt5/QtWidgets/qradiobutton.h \
 		/usr/include/qt5/QtWidgets/qscrollbar.h \
 		/usr/include/qt5/QtWidgets/qsizegrip.h \
@@ -14362,6 +14616,7 @@ b9layout.o: b9layout/b9layout.cpp b9layout/b9layout.h \
 		b9layout/SlcExporter.h \
 		loadingbar.h \
 		/usr/include/qt5/QtWidgets/QDialog \
+		/usr/include/qt5/QtWidgets/QProgressBar \
 		/usr/include/qt5/QtWidgets/QFileDialog \
 		/usr/include/qt5/QtWidgets/QMessageBox \
 		OS_Wrapper_Functions.h \
@@ -14751,7 +15006,10 @@ b9slice.o: b9slice/b9slice.cpp b9slice/b9slice.h \
 		ui_b9slice.h \
 		b9layout/b9layoutprojectdata.h \
 		/usr/include/qt5/QtGui/QVector2D \
-		/usr/include/qt5/QtCore/QSettings
+		/usr/include/qt5/QtCore/QSettings \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h \
+		/usr/include/qt5/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9slice.o b9slice/b9slice.cpp
 
 dlgprintprep.o: dlgprintprep.cpp /usr/include/qt5/QtWidgets/QPushButton \
@@ -14875,6 +15133,7 @@ dlgprintprep.o: dlgprintprep.cpp /usr/include/qt5/QtWidgets/QPushButton \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -14887,7 +15146,6 @@ dlgprintprep.o: dlgprintprep.cpp /usr/include/qt5/QtWidgets/QPushButton \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -15631,6 +15889,18 @@ b9updatemanager.o: b9updatemanager.cpp b9updatemanager.h \
 		/usr/include/qt5/QtGui/qevent.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QProgressBar \
+		/usr/include/qt5/QtWidgets/qprogressbar.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtGui/qicon.h \
 		b9updateentry.h \
 		/usr/include/qt5/QtWidgets/QMessageBox \
 		/usr/include/qt5/QtWidgets/qmessagebox.h \
@@ -16120,7 +16390,12 @@ b9layoutprojectdata.o: b9layout/b9layoutprojectdata.cpp b9layout/b9layoutproject
 		OS_Wrapper_Functions.h \
 		/usr/include/qt5/QtCore/QTextStream \
 		b9updateentry.h \
-		/usr/include/qt5/QtCore/QFile
+		/usr/include/qt5/QtCore/QFile \
+		/usr/include/qt5/QtWidgets/QFileDialog \
+		/usr/include/qt5/QtWidgets/qfiledialog.h \
+		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtWidgets/QMessageBox \
+		/usr/include/qt5/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9layoutprojectdata.o b9layout/b9layoutprojectdata.cpp
 
 b9modelinstance.o: b9layout/b9modelinstance.cpp b9layout/b9modelinstance.h \
@@ -17431,6 +17706,7 @@ dlgcalbuildtable.o: dlgcalbuildtable.cpp dlgcalbuildtable.h \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -17443,7 +17719,6 @@ dlgcalbuildtable.o: dlgcalbuildtable.cpp dlgcalbuildtable.h \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -17626,6 +17901,7 @@ dlgcalprojector.o: dlgcalprojector.cpp dlgcalprojector.h \
 		b9terminal.h \
 		/usr/include/qt5/QtWidgets/QDesktopWidget \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QHideEvent \
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
@@ -17638,7 +17914,6 @@ dlgcalprojector.o: dlgcalprojector.cpp dlgcalprojector.h \
 		logfilemanager.h \
 		/usr/include/qt5/QtCore/QString \
 		b9projector.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtGui/QImage \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtCore/QByteArray \
@@ -18160,6 +18435,359 @@ b9tesselator.o: b9layout/b9tesselator.cpp b9layout/b9tesselator.h \
 		/usr/include/qt5/QtOpenGL/qtopenglversion.h \
 		OS_GL_Wrapper.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o b9tesselator.o b9layout/b9tesselator.cpp
+
+qextserialport.o: qextserialport-1.2beta2/src/qextserialport.cpp qextserialport-1.2beta2/src/qextserialport.h \
+		/usr/include/qt5/QtCore/QIODevice \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialport_p.h \
+		/usr/include/qt5/QtCore/QReadWriteLock \
+		/usr/include/qt5/QtCore/qreadwritelock.h \
+		/usr/include/qt5/QtCore/qt_windows.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QReadLocker \
+		/usr/include/qt5/QtCore/QWriteLocker \
+		moc_qextserialport.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qextserialport.o qextserialport-1.2beta2/src/qextserialport.cpp
+
+qextserialenumerator.o: qextserialport-1.2beta2/src/qextserialenumerator.cpp qextserialport-1.2beta2/src/qextserialenumerator.h \
+		/usr/include/qt5/QtCore/QList \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialenumerator_p.h \
+		/usr/include/qt5/QtCore/qt_windows.h \
+		/usr/include/qt5/QtCore/QSocketNotifier \
+		/usr/include/qt5/QtCore/qsocketnotifier.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QMetaType \
+		/usr/include/qt5/QtCore/QRegExp \
+		moc_qextserialenumerator.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qextserialenumerator.o qextserialport-1.2beta2/src/qextserialenumerator.cpp
+
+qextserialport_unix.o: qextserialport-1.2beta2/src/qextserialport_unix.cpp qextserialport-1.2beta2/src/qextserialport.h \
+		/usr/include/qt5/QtCore/QIODevice \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialport_p.h \
+		/usr/include/qt5/QtCore/QReadWriteLock \
+		/usr/include/qt5/QtCore/qreadwritelock.h \
+		/usr/include/qt5/QtCore/qt_windows.h \
+		/usr/include/qt5/QtCore/QMutexLocker \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QSocketNotifier \
+		/usr/include/qt5/QtCore/qsocketnotifier.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qextserialport_unix.o qextserialport-1.2beta2/src/qextserialport_unix.cpp
+
+qextserialenumerator_unix.o: qextserialport-1.2beta2/src/qextserialenumerator_unix.cpp qextserialport-1.2beta2/src/qextserialenumerator.h \
+		/usr/include/qt5/QtCore/QList \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		qextserialport-1.2beta2/src/qextserialport_global.h \
+		/usr/include/qt5/QtCore/QtGlobal \
+		qextserialport-1.2beta2/src/qextserialenumerator_p.h \
+		/usr/include/qt5/QtCore/qt_windows.h \
+		/usr/include/qt5/QtCore/QSocketNotifier \
+		/usr/include/qt5/QtCore/qsocketnotifier.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QStringList \
+		/usr/include/qt5/QtCore/QDir \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qextserialenumerator_unix.o qextserialport-1.2beta2/src/qextserialenumerator_unix.cpp
 
 qrc_sliceeditview.o: qrc_sliceeditview.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_sliceeditview.o qrc_sliceeditview.cpp

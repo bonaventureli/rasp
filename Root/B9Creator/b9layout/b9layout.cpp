@@ -58,7 +58,7 @@
 //////////////////////////////////////////////////////
 //Public
 //////////////////////////////////////////////////////
-B9Layout::B9Layout(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
+B9Layout::B9Layout(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
 
